@@ -1,6 +1,7 @@
 # Evidence-Grounded LLMs for Interstitial Lung Disease Classification
 
-This repository contains code, prompt templates, feature definitions, and reproducibility materials for an evidence-grounded large language model (LLM) workflow for interstitial lung disease (ILD) diagnosis using radiomics semantic translation and local retrieval-augmented generation (RAG).
+This repository contains code, prompt templates, feature definitions, and reproducibility materials for our paper Evidence-Grounded Large Language Models for Diagnosis of Interstitial Lung Diseases: Bridging Quantitative Radiomics and Clinical Context via Semantic Translation.
+
 
 The workflow supports two classification tasks:
 
@@ -21,7 +22,7 @@ This repository provides:
 * Radiomics feature panel definitions for both diagnostic tasks
 * Healthy-reference normalization and semantic translation logic
 * ILD versus Healthy feature-level evidence flag rules
-* IPF versus non-IPF healthy-reference deviation rules using an overall ILD median threshold
+* IPF versus non-IPF deviation rules using an overall ILD median threshold
 * Local RAG knowledge base construction and retrieval scripts
 * LLM system prompts and user prompt templates
 * Model output parsing and diagnostic performance evaluation scripts
@@ -39,7 +40,7 @@ The workflow consists of five major stages:
    A large radiographically healthy CT reference cohort is used to estimate stable feature-level reference distributions.
 
 2. **Radiomics semantic translation**
-   Task-specific radiomics feature panels are transformed into structured natural-language descriptors. For the ILD versus Healthy task, feature-level deviations are categorized using predefined evidence flags. For the IPF versus non-IPF task, feature values are expressed as healthy-reference robust z scores and interpreted using an internal overall ILD median threshold.
+   Task-specific radiomics feature panels are transformed into structured natural-language descriptors. For the ILD versus Healthy task, feature-level deviations are categorized using predefined evidence flags. For the IPF versus non-IPF task, feature values are expressed as robust z scores and interpreted using an internal overall ILD median threshold.
 
 3. **Literature knowledge base construction**
    ILD guidelines, radiomics studies, imaging-AI studies, and LLM/RAG methodology papers are summarized into structured evidence chunks.
@@ -50,67 +51,12 @@ The workflow consists of five major stages:
 5. **LLM classification and evaluation**
    Multiple LLM families are queried using locked prompts. Outputs are parsed into structured JSON labels and evaluated using accuracy, sensitivity, specificity, PPV, NPV, macro-F1, and majority-vote ensemble rules.
 
----
-
-## Repository Structure
-
-```text
-.
-├── README.md
-├── LICENSE
-├── requirements.txt
-├── .env.example
-├── .gitignore
-│
-├── configs/
-│   ├── ild_vs_healthy_features_20.json
-│   ├── ipf_vs_nonipf_features_22.json
-│   ├── ild_feature_flag_rules.json
-│   └── ipf_overall_ild_median_threshold_rules.json
-│
-├── prompts/
-│   ├── ild_vs_healthy_system_prompt.txt
-│   ├── ipf_vs_nonipf_system_prompt.txt
-│   ├── ild_vs_healthy_user_prompt_example.txt
-│   └── ipf_vs_nonipf_user_prompt_example.txt
-│
-├── scripts/
-│   ├── 01_build_healthy_reference.py
-│   ├── 02_generate_ild_vs_healthy_reports.py
-│   ├── 03_build_ipf_healthyref_direction_stats.py
-│   ├── 04_generate_ipf_vs_nonipf_reports.py
-│   ├── 05_build_literature_knowledge_base.py
-│   ├── 06_build_local_rag_prompts.py
-│   ├── 07_run_llm_classification.py
-│   ├── 08_evaluate_model_outputs.py
-│   └── 09_majority_vote_ensemble.py
-│
-├── knowledge_base/
-│   ├── README.md
-│   ├── evidence_schema.json
-│   ├── example_paper_summary.json
-│   └── example_retrieval_chunk.json
-│
-├── examples/
-│   ├── example_patient_ild_vs_healthy.json
-│   ├── example_patient_ipf_vs_nonipf.json
-│   ├── example_model_output.json
-│   └── example_metrics.csv
-│
-└── docs/
-    ├── radiomics_feature_panels.md
-    ├── rag_workflow.md
-    ├── prompt_appendix.md
-    └── online_supplement.pdf
-```
-
----
 
 ## Diagnostic Tasks
 
 ### Task 1: ILD versus Healthy
 
-The ILD versus Healthy task uses a 20-feature original-image radiomics panel designed to capture global departure from radiographically healthy lung. Features include shape, first-order, GLCM, GLSZM, GLRLM, NGTDM, and GLDM descriptors.
+The ILD versus Healthy task uses a 14-feature original-image radiomics panel designed to capture global departure from radiographically healthy lung. Features include shape, first-order, GLCM, GLSZM, GLRLM, NGTDM, and GLDM descriptors.
 
 Each feature is compared against the healthy reference distribution and assigned one of five evidence flags:
 
@@ -135,7 +81,7 @@ The IPF versus non-IPF task uses a 22-feature multiscale radiomics panel designe
 * NGTDM busyness and coarseness
 * directional wavelet texture
 
-For this task, all patients are already diagnosed with ILD. Therefore, healthy-reference deviation is not interpreted as simple disease abnormality. Instead, each feature is scaled against the healthy reference distribution, and patient-level directional signals are assigned using an internal overall ILD median threshold.
+For this task, all patients are already diagnosed with ILD. Therefore, healthy-reference deviation is not interpreted as simple disease abnormality and patient-level directional signals are assigned using an internal overall ILD median threshold.
 
 ---
 
@@ -149,15 +95,7 @@ For approximately normal transformed features:
 z = (g(x) - mean_reference) / SD_reference
 ```
 
-For nonnormal features, empirical reference intervals or robust statistics are used.
-
-For the IPF versus non-IPF task, the healthy-reference robust z score is defined as:
-
-```text
-healthy_reference_robust_z = (patient_value - healthy_median) / healthy_IQR
-```
-
-The patient-level signal is then assigned by comparing this value with the overall ILD median healthy-reference z score for that feature.
+The patient-level signal is then assigned by comparing this value with the overall ILD median z score for that feature.
 
 ---
 
@@ -284,23 +222,12 @@ Create a Python environment:
 ```bash
 conda create -n ild-llm-rag python=3.11
 conda activate ild-llm-rag
-pip install -r requirements.txt
-```
-
-Create a local environment file:
-
-```bash
-cp .env.example .env
-```
 
 Add your API key if using OpenRouter or other LLM providers:
 
 ```text
 OPENROUTER_API_KEY=your_api_key_here
 ```
-
-Do not commit `.env` files to GitHub.
-
 ---
 
 ## Example Workflow
