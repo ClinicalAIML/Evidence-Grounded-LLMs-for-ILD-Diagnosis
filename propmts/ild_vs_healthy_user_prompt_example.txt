@@ -1,0 +1,63 @@
+[Patient]
+patient_id: 111
+--- Patient Radiomics Evidence Report ---
+Patient demographics: Age 61, Gender M
+
+Interpretation rules for this report:
+- Features with high absolute z-score but raw value still within the healthy 95% interval should be treated as statistical shift only, which may indicate early or subtle changes but with less confidence than features that also fall outside the interval.
+- Patients with multiple features showing strong outlier evidence are more likely to have significant underlying pathology than those with only one or no such features.
+- Patients with more features within reference range are more likely to be healthy.
+- Final interpretation should rely on the overall multi-feature pattern rather than a single metric.
+
+[Strong outlier evidence]
+- NGTDM Contrast (local texture contrast): raw=0.17374, z=9.43, healthy_interval=[0.006526, 0.06195], direction=high, within_interval=False
+- GLCM Inverse Difference Moment Normalised (texture homogeneity): raw=0.987914, z=-5.78, healthy_interval=[0.9934, 0.9991], direction=low, within_interval=False
+- NGTDM Coarseness (texture granularity): raw=1.38e-05, z=4.55, healthy_interval=[2.767e-07, 2.796e-06], direction=high, within_interval=False
+- GLDM Dependence Entropy (gray-level dependence complexity): raw=7.68312, z=2.69, healthy_interval=[6.608, 7.531], direction=high, within_interval=False
+- GLRLM Run Entropy (run-length distribution randomness): raw=5.29997, z=2.59, healthy_interval=[4.477, 5.121], direction=high, within_interval=False
+
+[Statistical shift only]
+- None
+
+[Interval outside only]
+- GLSZM Gray Level Non-Uniformity (variation in gray-level distribution): raw=4537.23, z=-1.24, healthy_interval=[1.542e+04, 1.639e+05], direction=low, within_interval=False
+
+[Mild shift within interval]
+- Shape Sphericity (roundness of the lesion): raw=0.39511, z=-1.50, healthy_interval=[0.3935, 0.4619], direction=low, within_interval=True
+- Shape Mesh Volume (lesion volume, mm³): raw=3.45687e+06, z=-1.46, healthy_interval=[3.113e+06, 8.383e+06], direction=low, within_interval=True
+- Shape Voxel Volume (lesion volume by voxel count, mm³): raw=3.45935e+06, z=-1.46, healthy_interval=[3.113e+06, 8.384e+06], direction=low, within_interval=True
+- GLCM Contrast (local intensity variation): raw=40.5766, z=1.33, healthy_interval=[9.632, 82.31], direction=high, within_interval=True
+
+[Within reference range]
+- GLRLM Long Run Emphasis (prevalence of long uniform runs): raw=1.70077, z=-0.55, healthy_interval=[1.272, 3.11], direction=low, within_interval=True
+- GLCM Cluster Shade (texture asymmetry): raw=2467.87, z=-0.55, healthy_interval=[2073, 1.288e+04], direction=low, within_interval=True
+- GLCM Cluster Prominence (texture irregularity): raw=110589, z=-0.52, healthy_interval=[1.009e+05, 1.115e+06], direction=low, within_interval=True
+- GLDM High Gray Level Emphasis (prevalence of high-intensity voxels): raw=255.521, z=0.04, healthy_interval=[63.95, 920.7], direction=high, within_interval=True
+
+[Direct Core Evidence]
+1. (P005 | score=0.191826) Paper ID: P005
+Title: Classification of Interstitial Lung Abnormality Patterns with an Ensemble of Deep Convolutional Neural Networks
+One-sentence takeaway: An ensemble of 2D/2.5D/3D CNNs trained on smoker CT data achieves AUC 0.863 for distinguishing ILA-positive from ILA-negative subjects, demonstrating that CNN-learned texture patterns (ground-glass, reticular, nodular, linear scar, subpleural line) can separate early interstitial abnormalities from normal parenchyma, though the smoker-only population and lack of explicit radiomic features limit direct applicability to general ILD-vs-healthy classification.
+Population summary: 208 CT scans from the COPDGene study (smokers); 37,427 manually labeled tissue sample points across 8 parenchymal classes including normal parenchyma, 5 interstitial patterns, and 2 emphysematous patterns. Clinical validation on 114 subjects (52 with ILA, 62 without ILA).
+ILD-supporting features: Ground-glass opacity pattern (CNN-learned features); Reticular pattern (CNN-learned features); Nodular pattern (CNN-learned features); Linear scar pattern (CNN-learned features); Subpleural line pattern (CNN-learned features); High percentage of lung volume classified as interstitial pattern (ILA score); High-certainty voxel probability for interstitial labels
+Healthy-supporting features: Normal parenchyma classification (CNN-learned features); Low percentage of lung volume affected by interstitial patterns; Low certainty scores for interstitial pattern labels
+Weak/non-specific features: Ground-glass pattern (very few training samples: 137 points, 9 scans); Nodular pattern (very few training samples: 116 points, 7 scans); Linear scar pattern (very few training samples: 195 points, 8 scans); Subpleural line pattern (relatively few training samples: 413 points, 19 scans); Reticular pattern sometimes misclassified as subpleural line or nodular; Normal parenchyma sometimes confused with centrilobular emphysema; Features learned from smoker cohort only, limiting generalizability to non-smoker ILD
+Interpretation notes: Features are learned by deep CNNs (not hand-crafted radiomics), so individual feature interpretability is limited; Grad-CAM activation maps confirm CNNs focus on lesion locations, not background; ILA score defined as percentage of lung volume classified as any interstitial pattern with certainty >95%; AUC of 0.863 for detecting visually defined ILA vs. non-ILA in 114 subjects; Normal parenchyma class was labeled both adjacent to and distant from lesions, only in clearly normal areas; CNN features capture local texture patterns at secondary pulmonary lobule scale (~30mm ROI); Sharp reconstruction kernel (B50) yielded better classification performance than soft kernel (B35); Population is exclusively smokers from COPDGene; ILA may represent pre-ILD rather than established ILD
+2. (P070 | score=0.152147) Paper ID: P070
+Title: Classification of parenchymal abnormality in scleroderma lung using a novel approach to denoise images collected via a multicenter study
+One-sentence takeaway: Denoised CT texture features (statistical, run-length, co-occurrence) classified normal lung tissue versus scleroderma ILD patterns with improved accuracy using SVM, particularly for distinguishing normal from ground-glass opacity, though normal lung ROIs came from ILD patients rather than healthy controls.
+Population summary: Scleroderma patients from the multicenter NIH-sponsored Scleroderma Lung Study (SLS); HRCT scans acquired across 13 clinical centers on 13 scanner models; ROIs labeled as lung fibrosis (LF), ground-glass (GG), honeycomb (HC), and normal lung (NL)
+ILD-supporting features: Statistical texture features distinguishing LF, GG, HC from NL; Run-length parameters elevated in fibrotic and ground-glass regions; Co-occurrence parameters differentiating abnormal parenchymal patterns; 58 texture features computed per pixel; 45 selected (original) or 38 selected (denoised) via multinomial logistic regression for disease classification
+Healthy-supporting features: Denoised images show more uniform attenuation in NL tissue (more homogeneous pixel values); NL tissue appears more uniformly dark after denoising, reflecting absence of pathological texture; Fewer oscillatory texture patterns in NL regions after denoising; NL correctly classified at 89.7% ROI-level using denoised texture features
+Weak/non-specific features: Honeycomb (HC) texture features showed poor classification rates (<20%) and were not improved by denoising; Features derived from original (non-denoised) images showed higher false-positive rates for NL classification; Pixel-level features susceptible to noise variation across scanner platforms and dose protocols; 2D-only features; 3D texture features not computed due to 10mm slice intervals
+Interpretation notes: Denoising with Aujol's algorithm reduced noise-driven texture variability, improving NL classification most substantially; NL tissue in scleroderma patients is typically more central, where noise is higher, making denoising especially beneficial for NL discrimination; GG patterns can be mimicked by image noise, leading to false positives when classifying NL vs. GG without denoising; SVM with radial basis kernel used for final classification after multinomial logistic regression feature selection; Normal lung tissue classification improved from 75.9% to 89.7% at ROI level after denoising; Features were not validated against pathological ground truth; ROIs selected for classic, unambiguous appearance only
+
+[Supporting Feature Evidence]
+1. (P132 | score=0.144994) Paper P132 (A comparative study of honeycombing on high resolution computed tomography with histologic lung remodeling in explants with usual interstitial pneumonia) provides an interpretation note: Features described are qualitative/semi-quantitative, not radiomic texture features in the computational sense. Takeaway: This study correlates qualitative HRCT features (honeycombing, GGO, traction bronchiectasis) with histologic remodeling patterns in UIP/IPF explants only, with no healthy controls, making it minimally applicable to ILD-vs-healthy classification using radiomics.
+2. (P070 | score=0.127567) Paper P070 (Classification of parenchymal abnormality in scleroderma lung using a novel approach to denoise images collected via a multicenter study) provides an interpretation note: Normal lung tissue classification improved from 75.9% to 89.7% at ROI level after denoising. Takeaway: Denoised CT texture features (statistical, run-length, co-occurrence) classified normal lung tissue versus scleroderma ILD patterns with improved accuracy using SVM, particularly for distinguishing normal from ground-glass opacity, though normal lung ROIs came from ILD patients rather than healthy controls.
+3. (P133 | score=0.119051) Paper P133 (Increased Prevalence of Gastroesophageal Reflux in Patients with Idiopathic Pulmonary Fibrosis) provides an interpretation note: No radiomics, CT texture, or imaging-based features are reported.. Takeaway: This 1998 study demonstrates high prevalence of gastroesophageal reflux in IPF patients compared to other ILD patients using esophageal pH monitoring, but contains no radiomics, imaging features, or healthy control comparisons, making it not applicable to ILD-vs-healthy radiomics classification tasks.
+4. (P006 | score=0.117441) Paper P006 (Quantitative CT Indexes in Idiopathic Pulmonary Fibrosis: Relationship with Physiologic Impairment) provides an interpretation note: In healthy subjects, CT attenuation histogram is sharply peaked (high kurtosis) and left-skewed relative to Gaussian distribution. Takeaway: In IPF patients, CT histogram features (kurtosis, skewness, mean lung attenuation) differ from healthy lung patterns and correlate moderately with pulmonary function, with kurtosis being the strongest single predictor, but the study lacks a healthy control group and uses only first-order statistics insensitive to ILD-specific textures.
+
+[Cautionary Evidence]
+1. (P016 | score=0.127896) Paper P016 (CT-Pathologic Correlation of Major Types of Pulmonary Fibrosis: Insights for Revisions to Current Guidelines) identifies a weak or non-specific pattern: Zonal distribution (no significant difference between UIP and non-UIP pathologic diagnoses, p=0.546). Takeaway: This study examines CT-pathologic correlation of UIP patterns across ILD subtypes without healthy controls, focusing on ILD subtype differentiation rather than ILD vs healthy classification, making it of low direct applicability to distinguishing ILD patients from healthy subjects.
+2. (P070 | score=0.126957) Paper P070 (Classification of parenchymal abnormality in scleroderma lung using a novel approach to denoise images collected via a multicenter study) identifies a weak or non-specific pattern: Pixel-level features susceptible to noise variation across scanner platforms and dose protocols. Takeaway: Denoised CT texture features (statistical, run-length, co-occurrence) classified normal lung tissue versus scleroderma ILD patterns with improved accuracy using SVM, particularly for distinguishing normal from ground-glass opacity, though normal lung ROIs came from ILD patients rather than healthy controls.
