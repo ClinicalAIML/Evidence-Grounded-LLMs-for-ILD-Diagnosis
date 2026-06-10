@@ -376,6 +376,3 @@ A formal citation will be added after publication.
 
 ---
 
-## License
-
-This repository is released for academic research use. Please see `LICENSE` for details.
