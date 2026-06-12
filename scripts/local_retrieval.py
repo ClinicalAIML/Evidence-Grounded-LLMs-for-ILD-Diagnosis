@@ -14,7 +14,7 @@ CURATED_DIR = BASE_DIR / "curated"
 RETRIEVAL_DIR = BASE_DIR / "retrieval_units"
 OUTPUT_DIR = BASE_DIR / "final_llm_inputs"
 
-PATIENT_REPORTS_JSON = Path("/NLST_lung_data/llm_validation/Radiomics_report.json")
+PATIENT_REPORTS_JSON = Path("/NLST_lung_data/llm_validation/Radiomics_report_flag.json")
 
 JSONL_INPUT = MERGED_DIR / "paper_summaries.jsonl"
 DIRECT_CORE_CHUNKS = RETRIEVAL_DIR / "direct_core_chunks.jsonl"
