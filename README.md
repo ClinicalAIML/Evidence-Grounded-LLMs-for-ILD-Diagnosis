@@ -230,52 +230,6 @@ OPENROUTER_API_KEY=your_api_key_here
 ```
 ---
 
-## Example Workflow
-
-### 1. Build healthy reference
-
-```bash
-python scripts/01_build_healthy_reference.py
-```
-
-### 2. Generate ILD versus Healthy case reports
-
-```bash
-python scripts/02_generate_ild_vs_healthy_reports.py
-```
-
-### 3. Generate IPF versus non-IPF case reports
-
-```bash
-python scripts/04_generate_ipf_vs_nonipf_reports.py
-```
-
-### 4. Build local RAG prompts
-
-```bash
-python scripts/06_build_local_rag_prompts.py
-```
-
-### 5. Run LLM classification
-
-```bash
-python scripts/07_run_llm_classification.py
-```
-
-### 6. Evaluate results
-
-```bash
-python scripts/08_evaluate_model_outputs.py
-```
-
-### 7. Majority-vote ensemble
-
-```bash
-python scripts/09_majority_vote_ensemble.py
-```
-
----
-
 ## Data Availability
 
 This repository does not provide raw CT images, hospital clinical data, patient-level data, or restricted NLST imaging files. Users should obtain access to source imaging datasets through the appropriate institutional or public data access mechanisms.
