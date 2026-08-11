@@ -1,6 +1,6 @@
 # Evidence-Grounded LLMs for Interstitial Lung Disease Classification
 
-This repository contains code, prompt templates, feature definitions, and reproducibility materials for our paper Evidence-Grounded Large Language Models for Diagnosis of Interstitial Lung Diseases: Bridging Quantitative Radiomics and Clinical Context via Semantic Translation.
+This repository contains code, prompt templates, feature definitions, and reproducibility materials for our paper Evidence-Grounded Large Language Models for Classification of Interstitial Lung Diseases: Bridging Quantitative Radiomics and Clinical Context via Semantic Translation.
 
 
 The workflow supports two classification tasks:
