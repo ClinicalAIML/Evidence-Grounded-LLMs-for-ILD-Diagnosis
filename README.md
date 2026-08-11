@@ -248,10 +248,6 @@ Before using this code with clinical data, users should ensure that all data han
 
 If you use this repository, please cite the associated manuscript:
 
-```text
-Evidence-Grounded Large Language Models for Diagnosis of Interstitial Lung Diseases:
-Bridging Quantitative Radiomics and Clinical Context via Semantic Translation.
-```
 
 A formal citation will be added after publication.
 
